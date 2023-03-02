@@ -1,1 +1,1 @@
-# spring-board-prac
+# spring-vue-board-prac
