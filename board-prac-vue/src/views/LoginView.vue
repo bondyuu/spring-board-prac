@@ -13,14 +13,27 @@
             </div>
             <button>login</button>
         </form>
+
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
     name: 'LoginView',
+    setup() {
+        const store = useStore();
+        const at = computed(() => store.state.accessToken);
+        const setToken = (accessToken, refreshToken) => {
+            store.commit('setAccessToken', accessToken),
+            store.commit('setRefreshToken', refreshToken)
+        };
+
+        return { at, setToken };
+    },
     data() {
         return {
             email: '',
@@ -39,8 +52,15 @@ export default {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then ((res) => {
+            })
+            .then ((res) => {
                 console.log(res);
+                this.setToken(res.data.grantType + res.data.accessToken, res.data.refreshToken);
+                this.$router.push('/posts')
+            })
+            .catch((err) => {
+                alert('로그인에 실패했습니다.');
+                console.log(err);
             });
         }
     }
