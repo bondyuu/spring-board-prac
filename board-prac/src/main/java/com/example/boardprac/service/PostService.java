@@ -34,6 +34,7 @@ public class PostService {
         return ResponseEntity.ok(postList);
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<?> findById(long id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Not Found")
