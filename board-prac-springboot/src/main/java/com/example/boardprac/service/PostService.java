@@ -3,6 +3,7 @@ package com.example.boardprac.service;
 import com.example.boardprac.auth.UserDetailsImpl;
 import com.example.boardprac.domain.Post;
 import com.example.boardprac.domain.User;
+import com.example.boardprac.dto.PostDto;
 import com.example.boardprac.dto.PostRequestDto;
 import com.example.boardprac.repository.PostRepository;
 import com.example.boardprac.repository.UserRepository;
@@ -37,7 +38,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
-        List<Post> postList = postRepository.findAll();
+        List<PostDto> postList = postRepository.findAll().stream().map(Post::toPostDto).toList();
         return ResponseEntity.ok(postList);
     }
 
@@ -57,7 +58,7 @@ public class PostService {
         );
         post.edit(requestDto);
 
-        return ResponseEntity.ok(post);
+        return ResponseEntity.ok(post.toPostDto());
     }
 
     @Transactional
