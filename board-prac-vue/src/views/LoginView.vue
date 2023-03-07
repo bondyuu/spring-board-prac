@@ -56,7 +56,7 @@ export default {
             .then ((res) => {
                 console.log(res);
                 this.setToken(res.data.grantType + res.data.accessToken, res.data.refreshToken);
-                this.$router.push('/posts')
+                this.$router.push('/')
                 console.log(this.$store.state.isLogin);
             })
             .catch((err) => {

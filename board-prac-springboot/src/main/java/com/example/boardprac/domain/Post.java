@@ -1,7 +1,9 @@
 package com.example.boardprac.domain;
 
+import com.example.boardprac.dto.PostDto;
 import com.example.boardprac.dto.PostRequestDto;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +13,7 @@ import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,9 +23,9 @@ public class Post {
     @Column
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User author;
+    private User user;
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp
@@ -32,7 +35,7 @@ public class Post {
     public Post(String title, String content, User user) {
         this.title = title;
         this.content = content;
-        this.author = user;
+        this.user = user;
     }
 
     public void edit(PostRequestDto requestDto) {
@@ -40,4 +43,12 @@ public class Post {
         this.content = requestDto.getContent();
     }
 
+    public PostDto toPostDto() {
+        return PostDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .content(this.content)
+                .user(this.user.toUserDto())
+                .build();
+    }
 }

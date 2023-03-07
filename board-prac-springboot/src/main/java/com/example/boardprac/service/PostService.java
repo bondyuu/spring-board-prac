@@ -5,6 +5,7 @@ import com.example.boardprac.domain.Post;
 import com.example.boardprac.domain.User;
 import com.example.boardprac.dto.PostRequestDto;
 import com.example.boardprac.repository.PostRepository;
+import com.example.boardprac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,15 +18,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
+    @Transactional
     public ResponseEntity<?> save(PostRequestDto requestDto, UserDetailsImpl userDetails) {
-        Post post = Post.builder()
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .user(userDetails.getUser())
-                .build();
+        User loginUser = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("Not Found")
+        );
+        System.out.println(loginUser.getId());
+        Post post = postRepository.save(Post.builder()
+                                            .title(requestDto.getTitle())
+                                            .content(requestDto.getContent())
+                                            .user(loginUser)
+                                            .build());
 
-        return ResponseEntity.ok(postRepository.save(post));
+        return ResponseEntity.ok(post.toPostDto());
     }
 
     @Transactional(readOnly = true)

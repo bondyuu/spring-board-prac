@@ -1,33 +1,74 @@
 <template>
-    <div class="list">
-        <button @click="getBoards">dd</button>
+    <div v-for="(item, idx) in list" :key="idx">
+        <b-card-group deck>
+            <b-card bg-variant="light" header="Light" class="text-center">
+                <b-card-text>{{ item.title }}</b-card-text>
+            </b-card>
+        </b-card-group>
+    </div>
+
+
+
+    <div class="mt-3">
+        <b-card-group deck>
+            <b-card bg-variant="light" header="Light" class="text-center">
+                <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
+            </b-card>
+            <b-card bg-variant="light" header="Light" class="text-center">
+                <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
+            </b-card>
+            <b-card bg-variant="light" header="Light" class="text-center">
+                <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
+            </b-card>
+        </b-card-group>
     </div>
 </template>
   
 <script>
 import axios from 'axios';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
     name: 'PostList',
-    data() {
-    return {
+    setup() {
+        const store = useStore();
+        const at = computed(() => store.state.accessToken);
         
-    };
-},
-methods: {
-    getBoards() {
-        axios
-        .get('http://localhost:8080/posts',
-        {
-            headers: {
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY3ODA5MTExM30.LOjK6QWvaj05qfBovO7a-oNjKm6BsIhWmRH_u-O382Q'
+        return { at };
+    },
+    data() {
+        return {
+            list: {
+                id: '',
+                title: '',
+                content: '',
+                author: '',
+                createdAt: ''
             }
-        })
-        .then((result) => {
-            console.log(result);
-        });
+        };
+    },
+    mounted() {
+        this.getBoards()
+    },
+    methods: {
+        getBoards() {
+            axios
+            .get('http://localhost:8080/posts',
+            {
+                headers: {
+                    Authorization: this.at
+                }
+            })
+            .then((res) => {
+                console.log(res);
+                this.list = res.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
     }
-}
 }
 </script>
 

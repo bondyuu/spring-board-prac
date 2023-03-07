@@ -1,5 +1,7 @@
 package com.example.boardprac.domain;
 
+import com.example.boardprac.dto.UserDto;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "users")
@@ -27,8 +30,8 @@ public class User {
     @Column
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author", orphanRemoval = true)
-    private List<Post> postList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
+    private List<Post> postList = new ArrayList<>();
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp
@@ -40,6 +43,14 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
+    public UserDto toUserDto() {
+        return UserDto.builder()
+                .id(this.id)
+                .email(this.email)
+                .build();
+    }
+
     public enum Role {
         ROLE_USER,
         ROLE_ADMIN;
