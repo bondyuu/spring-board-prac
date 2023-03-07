@@ -1,7 +1,11 @@
 import { createStore } from "vuex";
+import createPersistedState from 'vuex-persistedstate';
 
 // state, getters, mutations, actions, modules
 export default createStore({
+    plugins: [
+        createPersistedState()
+    ],
     state : {
         counter : 2,
         accessToken: null,

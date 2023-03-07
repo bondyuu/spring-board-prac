@@ -57,6 +57,7 @@ export default {
                 console.log(res);
                 this.setToken(res.data.grantType + res.data.accessToken, res.data.refreshToken);
                 this.$router.push('/posts')
+                console.log(this.$store.state.isLogin);
             })
             .catch((err) => {
                 alert('로그인에 실패했습니다.');

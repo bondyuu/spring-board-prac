@@ -3,10 +3,24 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/signup">SignUp</router-link> |
     <router-link to="/login">Login</router-link> |
-    <router-link to="/posts">PostList</router-link>
+    <router-link v-if="store.getters.isLogin" to="/posts">PostList</router-link>
   </nav>
   <router-view/>
+   
 </template>
+
+<script>
+import { useStore } from 'vuex';
+
+export default {
+  setup() {
+    const store = useStore();
+    
+    return { store };
+  }
+}
+</script>
+
 
 <style>
 #app {
