@@ -1,14 +1,14 @@
 <template>
-    <div v-for="(item, idx) in list" :key="idx">
-        <b-card-group deck>
-            <b-card bg-variant="light" header="Light" class="text-center">
-                <b-card-text>{{ item.title }}</b-card-text>
+    <div v-for="(item, idx) in list" :key="idx" style="margin-bottom: 20px; width: 1300px; display:inline-block">
+            <b-card>
+                <b-card-title>{{ item.title }}</b-card-title>
+                <b-card-text>
+                    {{ item.content }}
+                </b-card-text>
+                <b-card-text class="small text-muted">{{ item.user }}</b-card-text>
             </b-card>
-        </b-card-group>
     </div>
-
-
-
+<!-- 
     <div class="mt-3">
         <b-card-group deck>
             <b-card bg-variant="light" header="Light" class="text-center">
@@ -21,7 +21,7 @@
                 <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
             </b-card>
         </b-card-group>
-    </div>
+    </div> -->
 </template>
   
 <script>
@@ -43,8 +43,7 @@ export default {
                 id: '',
                 title: '',
                 content: '',
-                author: '',
-                createdAt: ''
+                user: {id: '', email:''}
             }
         };
     },
@@ -61,7 +60,7 @@ export default {
                 }
             })
             .then((res) => {
-                console.log(res);
+                console.log(res.data[0].user.id);
                 this.list = res.data;
             })
             .catch((err) => {
@@ -72,5 +71,5 @@ export default {
 }
 </script>
 
-  <style scoped>
-  </style>
+<style scoped>
+ </style>

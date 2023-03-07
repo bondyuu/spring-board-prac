@@ -1,13 +1,25 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link v-if="store.getters.isLogin" to="/posts">PostList</router-link>
-  </nav>
-  <b-button variant="outline-primary" href="/signup" v-if="!store.getters.isLogin">Sign Up</b-button>
-  <b-button variant="outline-primary" href="/login" v-if="!store.getters.isLogin">Login</b-button>
-  <b-button variant="outline-primary" @click="logout" v-if="store.getters.isLogin">Logout</b-button>
+  <div style="margin-left: 100px; margin-bottom: 40px;">
+    <nav style="display: inline-block; width: 1200px">
+      <router-link to="/">Home</router-link> 
+      <routerIf v-if="store.getters.isLogin">
+        | <router-link to="/posts">PostList</router-link>
+        | <router-link to="/mypage">My Page</router-link>
+      </routerIf>
+    </nav>
+
+    <div style="display: inline-block">
+        <buttonIf v-if="store.getters.isLogin">
+          <b-button variant="outline-primary" @click="logout">Logout</b-button>
+        </buttonIf>
+        <buttonIf v-else>
+          <b-button variant="outline-primary" href="/signup">Sign Up</b-button>
+          <b-button variant="outline-primary" href="/login" style="margin-left: 10px;">Login</b-button>
+        </buttonIf>
+    </div>
+  </div> 
+
   <router-view/>
-  
 </template>
 
 <script>

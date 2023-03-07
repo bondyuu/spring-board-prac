@@ -1,6 +1,5 @@
 <template>
-    <div class="about">
-      <h1>This is an post list page</h1>
+    <div class="postlist">
       <PostList />
     </div>
 </template>
@@ -14,4 +13,9 @@ export default {
   }
 }
 </script>
-  
+
+<style scoped>
+  .postlist {
+    text-align: center;
+}
+</style>
