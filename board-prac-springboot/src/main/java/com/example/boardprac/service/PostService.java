@@ -8,10 +8,12 @@ import com.example.boardprac.dto.PostRequestDto;
 import com.example.boardprac.repository.PostRepository;
 import com.example.boardprac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,7 +28,6 @@ public class PostService {
         User loginUser = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("Not Found")
         );
-        System.out.println(loginUser.getId());
         Post post = postRepository.save(Post.builder()
                                             .title(requestDto.getTitle())
                                             .content(requestDto.getContent())
@@ -37,12 +38,12 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> find(String title) {
-        List<PostDto> postList;
+    public ResponseEntity<?> find(String title, Pageable pageable) {
+        Slice<PostDto> postList;
         if (title.equals("")) {
-            postList = postRepository.findAll().stream().map(Post::toPostDto).toList();
+            postList = postRepository.findAll(pageable).map(Post::toPostDto);
         } else {
-            postList = postRepository.findAllByTitleContaining(title).stream().map(Post::toPostDto).toList();
+            postList = postRepository.findAllByTitleContaining(title, pageable).map(Post::toPostDto);
         }
         return ResponseEntity.ok(postList);
     }

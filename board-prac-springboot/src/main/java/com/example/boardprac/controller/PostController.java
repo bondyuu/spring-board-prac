@@ -5,10 +5,13 @@ import com.example.boardprac.dto.PostRequestDto;
 import com.example.boardprac.service.PostService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/posts")
@@ -24,8 +27,9 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<?> find(@RequestParam String title) {
-        return postService.find(title);
+    public ResponseEntity<?> find(@RequestParam String title,
+                                  @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return postService.find(title, pageable);
     }
 
     @PutMapping("/{postId}")
