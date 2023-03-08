@@ -25,7 +25,7 @@ export default {
   data() {
     return {
         list: [],
-        searchTitle: ''
+        searchTitle: '',
     };
   },
   mounted() {
@@ -37,17 +37,18 @@ export default {
       axios
       .get('http://localhost:8080/posts?title='+this.searchTitle,
       {
-          headers: {
-              'Authorization': this.$store.state.accessToken
-          }
+        headers: {
+            'Authorization': this.$store.state.accessToken
+        }
       })
       .then((res) => {
-          this.list = res.data;
+        console.log(res);
+        this.list = res.data.content;
       })
       .catch((err) => {
-          console.log(err);
+        console.log(err);
       });
-    }
+    },
   }
 }
 </script>

@@ -1,6 +1,17 @@
 <template>
     <b-card >
-        <b-card-title class="title">{{ item.title }}</b-card-title>
+        <b-card-title class="title">
+            {{ item.title }}
+            <div class="more">
+                <b-dropdown id="dropdown-offset" class="m-2" no-caret>
+                    <template #button-content>
+                        <BIconThreeDotsVertical></BIconThreeDotsVertical>
+                    </template>
+                    <b-dropdown-item href="#">Edit</b-dropdown-item>
+                    <b-dropdown-item href="#">Delete</b-dropdown-item>
+                </b-dropdown>
+            </div>
+        </b-card-title>
         <b-card-text class="content">
             {{ item.content }}
         </b-card-text>
@@ -9,22 +20,23 @@
 </template>
   
 <script>
+import { BIconThreeDotsVertical } from 'bootstrap-icons-vue';
 
 export default {
     name: 'PostCard',
     props: {
         item: Object
-    }
+    },
+    components: {
+    BIconThreeDotsVertical
+}
 }
 </script>
 
 <style scoped>
-/* .wrapper {
-    margin-bottom: 20px; 
-    margin-right: 3%;
-    width: 32%;
-    display: inline-block;
-} */
+.more {
+    float: right;
+}
 .title, .content {
     text-align: left;
     margin-left: 2%;
