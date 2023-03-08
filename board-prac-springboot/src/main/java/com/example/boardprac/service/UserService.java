@@ -70,4 +70,17 @@ public class UserService {
         return ResponseEntity.ok(token);
     }
 
+    @Transactional
+    public ResponseEntity<?> logout(UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("Not Found")
+        );
+
+        refreshTokenRepository.deleteByUser(user);
+
+        return ResponseEntity.ok("logout");
+    }
+
 }
