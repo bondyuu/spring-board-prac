@@ -32,6 +32,10 @@ public class User {
     private Role role;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
     private List<Post> postList = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
+    private List<Post> heartList = new ArrayList<>();
+
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp

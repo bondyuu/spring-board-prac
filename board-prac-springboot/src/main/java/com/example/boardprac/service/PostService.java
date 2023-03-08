@@ -1,10 +1,12 @@
 package com.example.boardprac.service;
 
 import com.example.boardprac.auth.UserDetailsImpl;
+import com.example.boardprac.domain.Heart;
 import com.example.boardprac.domain.Post;
 import com.example.boardprac.domain.User;
 import com.example.boardprac.dto.PostDto;
 import com.example.boardprac.dto.PostRequestDto;
+import com.example.boardprac.repository.HeartRepository;
 import com.example.boardprac.repository.PostRepository;
 import com.example.boardprac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final HeartRepository heartRepository;
 
     @Transactional
     public ResponseEntity<?> save(PostRequestDto requestDto, UserDetailsImpl userDetails) {
@@ -75,5 +79,31 @@ public class PostService {
 
         postRepository.delete(post);
         return ResponseEntity.ok("post deleted");
+    }
+
+    @Transactional
+    public ResponseEntity<?> like(long id, UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("Not Found")
+        );
+
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Not Found")
+        );
+
+        Optional<Heart> heart = heartRepository.findByUserAndPost(user, post);
+
+        if (heart.isEmpty()) {
+            heartRepository.save(Heart.builder()
+                                        .user(user)
+                                        .post(post)
+                                        .build());
+            post.like();
+            return ResponseEntity.ok("좋아요 성공");
+        }
+        heartRepository.delete(heart.get());
+        post.unlike();
+        return ResponseEntity.ok("좋아요 취소");
     }
 }

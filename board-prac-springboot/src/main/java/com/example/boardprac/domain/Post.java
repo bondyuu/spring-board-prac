@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -23,9 +25,16 @@ public class Post {
     @Column
     private String content;
 
+    @Column
+    private long heartNum;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", orphanRemoval = true)
+    private List<Heart> heartList = new ArrayList<>();
+
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp
@@ -36,11 +45,20 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
+        this.heartNum = 0L;
     }
 
     public void edit(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
+    }
+
+    public void like() {
+        this.heartNum++;
+    }
+
+    public void unlike() {
+        this.heartNum--;
     }
 
     public PostDto toPostDto() {
@@ -49,6 +67,7 @@ public class Post {
                 .title(this.title)
                 .content(this.content)
                 .user(this.user.toUserDto())
+                .heartNum(this.heartNum)
                 .build();
     }
 }
