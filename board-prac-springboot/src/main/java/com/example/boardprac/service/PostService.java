@@ -11,6 +11,7 @@ import com.example.boardprac.repository.PostRepository;
 import com.example.boardprac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,16 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<?> save(PostRequestDto requestDto, UserDetailsImpl userDetails) {
-        User loginUser = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+        Optional<User> loginUser = userRepository.findByEmail(userDetails.getUsername());
+
+        if (loginUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
         Post post = postRepository.save(Post.builder()
                                             .title(requestDto.getTitle())
                                             .content(requestDto.getContent())
-                                            .user(loginUser)
+                                            .user(loginUser.get())
                                             .build());
 
         return ResponseEntity.ok(post.toPostDto());
@@ -43,29 +47,34 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> find(String title, Pageable pageable) {
-        Slice<PostDto> postList;
         if (title.equals("")) {
-            postList = postRepository.findAll(pageable).map(Post::toPostDto);
-        } else {
-            postList = postRepository.findAllByTitleContaining(title, pageable).map(Post::toPostDto);
+            return ResponseEntity.ok(postRepository.findAll(pageable).map(Post::toPostDto));
         }
-        return ResponseEntity.ok(postList);
+
+        return ResponseEntity.ok(postRepository.findAllByTitleContaining(title, pageable).map(Post::toPostDto));
     }
 
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(long id) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+        Optional<Post> optionalPost = postRepository.findById(id);
 
-        return ResponseEntity.ok(post);
+        if (optionalPost.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(optionalPost.get());
     }
 
     @Transactional
     public ResponseEntity<?> update(long id, PostRequestDto requestDto) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+        Optional<Post> optionalPost = postRepository.findById(id);
+
+        if (optionalPost.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Post post = optionalPost.get();
+
         post.edit(requestDto);
 
         return ResponseEntity.ok(post.toPostDto());
@@ -73,9 +82,13 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<?> delete(long id) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+        Optional<Post> optionalPost = postRepository.findById(id);
+
+        if (optionalPost.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Post post = optionalPost.get();
 
         postRepository.delete(post);
         return ResponseEntity.ok("post deleted");
@@ -83,14 +96,19 @@ public class PostService {
 
     @Transactional
     public ResponseEntity<?> like(long id, UserDetailsImpl userDetails) {
-        String email = userDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+        Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
+        Optional<Post> optionalPost = postRepository.findById(id);
 
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (optionalPost.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = optionalUser.get();
+        Post post = optionalPost.get();
 
         Optional<Heart> heart = heartRepository.findByUserAndPost(user, post);
 
