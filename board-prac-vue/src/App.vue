@@ -1,11 +1,15 @@
 <template>
-  <div style="margin-left: 100px; margin-bottom: 40px;">
-    <nav style="display: inline-block; width: 1200px">
+  <div style="margin-bottom: 40px;">
+    <p class="bondyuu">BONDYUU</p>
+
+    <nav>
       <router-link to="/">Home</router-link> 
-      <routerIf v-if="store.getters.isLogin">
-        | <router-link to="/posts">PostList</router-link>
-        | <router-link to="/mypage">My Page</router-link>
-      </routerIf>
+      | <router-link to="/posts">PostList</router-link>
+      | <router-link to="/mypage">My Page</router-link>
+      | <router-link to="/mypage">My Page</router-link>
+      | <router-link to="/mypage">My Page</router-link>
+      | <router-link to="/mypage">My Page</router-link>
+
     </nav>
 
     <div style="display: inline-block">
@@ -48,17 +52,31 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
+}
+
+.bondyuu {
+  margin-left: 3%;
+  display: inline-block; 
+  font-weight: bold;
+  font-size: 35px;
+  width: 10%;
 }
 
 nav {
   padding: 30px;
+  padding: 30px;
+  display: inline-block;
+  width: 70%;
+  margin-left: 3%;
 }
 
 nav a {
   font-weight: bold;
   color: #2c3e50;
+  font-size: 25px;
+  margin-right: 20px;
+  margin-left: 20px;
 }
 
 nav a.router-link-exact-active {
