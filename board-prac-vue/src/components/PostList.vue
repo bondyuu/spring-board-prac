@@ -1,27 +1,14 @@
 <template>
-    <div v-for="(item, idx) in list" :key="idx" style="margin-bottom: 20px; width: 1300px; display:inline-block">
-            <b-card>
-                <b-card-title>{{ item.title }}</b-card-title>
-                <b-card-text>
+    <div v-for="(item, idx) in list" :key="idx" class="wrapper">
+            <b-card >
+                <b-card-title class="title">{{ item.title }}</b-card-title>
+                <b-card-text class="content">
                     {{ item.content }}
                 </b-card-text>
-                <b-card-text class="small text-muted">{{ item.user }}</b-card-text>
+                <b-card-text class="small text-muted">{{ item.user.email }}</b-card-text>
             </b-card>
     </div>
-<!-- 
-    <div class="mt-3">
-        <b-card-group deck>
-            <b-card bg-variant="light" header="Light" class="text-center">
-                <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-            </b-card>
-            <b-card bg-variant="light" header="Light" class="text-center">
-                <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-            </b-card>
-            <b-card bg-variant="light" header="Light" class="text-center">
-                <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
-            </b-card>
-        </b-card-group>
-    </div> -->
+
 </template>
   
 <script>
@@ -39,12 +26,7 @@ export default {
     },
     data() {
         return {
-            list: {
-                id: '',
-                title: '',
-                content: '',
-                user: {id: '', email:''}
-            }
+            list: []
         };
     },
     mounted() {
@@ -60,7 +42,6 @@ export default {
                 }
             })
             .then((res) => {
-                console.log(res.data[0].user.id);
                 this.list = res.data;
             })
             .catch((err) => {
@@ -72,4 +53,19 @@ export default {
 </script>
 
 <style scoped>
- </style>
+.wrapper {
+    margin-bottom: 20px; 
+    margin-right: 3%;
+    width: 32%;
+    display: inline-block;
+}
+.title, .content {
+    text-align: left;
+    margin-left: 2%;
+    margin-top: 2%;
+}
+
+.small {
+    text-align: right;
+}
+</style>
