@@ -28,6 +28,7 @@
 
 <script>
 import { useStore } from 'vuex';
+import axios from 'axios';
 
 export default {
   setup() {
@@ -40,8 +41,23 @@ export default {
   },
   methods: {
     logout() {
-      this.setToken(null, null);
-      this.$router.push('/')
+      axios.
+      delete("http://localhost:8080/users/logout",
+      {
+        headers: {
+          Authorization: this.$store.state.accessToken,
+        }
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data === 'logout') {
+          this.setToken(null, null);
+          this.$router.push('/');
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      })
     }
   }
 }

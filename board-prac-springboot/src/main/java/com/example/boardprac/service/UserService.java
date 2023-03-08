@@ -50,7 +50,7 @@ public class UserService {
                                         .build());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseEntity<?> login(LoginRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
