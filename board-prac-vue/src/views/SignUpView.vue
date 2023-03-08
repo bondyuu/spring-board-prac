@@ -46,3 +46,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.signup {
+    text-align: center;
+}
+</style>

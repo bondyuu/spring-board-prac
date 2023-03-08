@@ -66,3 +66,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.login {
+    text-align: center;
+}
+</style>
