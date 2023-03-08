@@ -41,6 +41,7 @@ export default {
   methods: {
     logout() {
       this.setToken(null, null);
+      this.$router.push('/')
     }
   }
 }
