@@ -37,8 +37,13 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findAll() {
-        List<PostDto> postList = postRepository.findAll().stream().map(Post::toPostDto).toList();
+    public ResponseEntity<?> find(String title) {
+        List<PostDto> postList;
+        if (title.equals("")) {
+            postList = postRepository.findAll().stream().map(Post::toPostDto).toList();
+        } else {
+            postList = postRepository.findAllByTitleContaining(title).stream().map(Post::toPostDto).toList();
+        }
         return ResponseEntity.ok(postList);
     }
 

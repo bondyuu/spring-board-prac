@@ -24,8 +24,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAll() {
-        return postService.findAll();
+    public ResponseEntity<?> find(@RequestParam String title) {
+        return postService.find(title);
     }
 
     @PutMapping("/{postId}")
