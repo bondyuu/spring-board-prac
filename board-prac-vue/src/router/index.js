@@ -24,6 +24,11 @@ const routes = [
     path: '/posts',
     name: 'postlist',
     component: () => import('../views/PostListView.vue')
+  },
+  {
+    path: '/write-post',
+    name: 'writepost',
+    component: () => import('../views/PostWriteView.vue')
   }
 ]
 

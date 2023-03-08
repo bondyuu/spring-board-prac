@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h3>
-      If you login to this page, you could see some menu on the nav-bar
+      HI~
     </h3>
   </div>
 </template>
