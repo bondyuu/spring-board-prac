@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,10 +48,7 @@ public class UserService {
                                             .password(bCryptPasswordEncoder.encode(password))
                                             .role(Role.ROLE_USER)
                                             .build());
-        return ResponseEntity.ok(UserDto.builder()
-                                        .id(user.getId())
-                                        .email(user.getEmail())
-                                        .build());
+        return ResponseEntity.ok(user.toUserDto());
     }
 
     @Transactional
@@ -93,6 +91,26 @@ public class UserService {
         refreshTokenRepository.deleteByUser(user);
 
         return ResponseEntity.ok("logout");
+    }
+
+    public ResponseEntity<?> getUsers(String email, UserDetailsImpl userDetails) {
+        String loginUserEmail = userDetails.getUsername();
+        Optional<User> optionalUser = userRepository.findByEmail(loginUserEmail);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("Not Found Admin");
+        }
+
+        User loginUser = optionalUser.get();
+        if (loginUser.isNotAdmin()) {
+            return ResponseEntity.badRequest().body("Only Admin Permitted");
+        }
+
+        if (email.equals("")) {
+            return ResponseEntity.ok(userRepository.findAll().stream().map(User::toUserDto).toList());
+        }
+
+        return ResponseEntity.ok(userRepository.findAllByEmailContaining(email).stream().map(User::toUserDto).toList());
     }
 
 }

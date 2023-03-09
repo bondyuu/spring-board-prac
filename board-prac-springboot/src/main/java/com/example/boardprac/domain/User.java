@@ -53,6 +53,11 @@ public class User {
         return UserDto.builder()
                 .id(this.id)
                 .email(this.email)
+                .role(this.role)
                 .build();
+    }
+
+    public boolean isNotAdmin() {
+        return !this.role.equals(Role.ROLE_ADMIN);
     }
 }
