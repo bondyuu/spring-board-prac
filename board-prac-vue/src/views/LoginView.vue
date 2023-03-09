@@ -30,8 +30,10 @@ export default {
             store.commit('setAccessToken', accessToken),
             store.commit('setRefreshToken', refreshToken)
         };
-
-        return { at, setToken };
+        const setRole = (role) => {
+            store.commit('setRole', role)
+        };
+        return { at, setToken, setRole };
     },
     data() {
         return {
@@ -54,7 +56,8 @@ export default {
             })
             .then ((res) => {
                 console.log(res);
-                this.setToken(res.data.grantType + res.data.accessToken, res.data.refreshToken);
+                this.setToken(res.data.token.grantType + res.data.token.accessToken, res.data.token.refreshToken);
+                this.setRole(res.data.role);
                 this.$router.push('/')
                 console.log(this.$store.state.isLogin);
             })

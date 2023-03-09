@@ -1,15 +1,19 @@
-<template>
+<template >
   <div style="margin-bottom: 40px;">
     <p class="bondyuu">BONDYUU</p>
 
-    <nav>
+    <nav v-if="!store.getters.isAdmin">
       <router-link to="/">Home</router-link> 
       | <router-link to="/posts">PostList</router-link>
       | <router-link to="/mypage">My Page</router-link>
       | <router-link to="/mypage">My Page</router-link>
       | <router-link to="/mypage">My Page</router-link>
       | <router-link to="/mypage">My Page</router-link>
-
+    </nav>
+    <nav v-else>
+      <router-link to="/admin">main</router-link> 
+      | <router-link to="/admin/users">Users</router-link>
+      | <router-link to="/admin/posts">Posts</router-link>
     </nav>
 
     <div style="display: inline-block">
@@ -37,7 +41,10 @@ export default {
             store.commit('setAccessToken', accessToken),
             store.commit('setRefreshToken', refreshToken)
         };
-    return { store, setToken };
+    const setRole = (role) => {
+            store.commit('setRole', role)
+        };
+    return { store, setToken, setRole };
   },
   methods: {
     logout() {
@@ -52,6 +59,7 @@ export default {
         console.log(res);
         if (res.data === 'logout') {
           this.setToken(null, null);
+          this.setRole(null);
           this.$router.push('/');
         }
       })
