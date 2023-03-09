@@ -61,7 +61,11 @@ public class User {
         return !this.role.equals(Role.ROLE_ADMIN);
     }
 
-    public boolean canNotControl(User target) {
+    public boolean canNotControlUser(User target) {
         return this.id != target.getId() && this.role != Role.ROLE_ADMIN;
+    }
+
+    public boolean canNotControlPost(Post target) {
+        return !this.equals(target.getUser()) && this.role != Role.ROLE_ADMIN;
     }
 }

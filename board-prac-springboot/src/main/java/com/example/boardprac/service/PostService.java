@@ -29,7 +29,7 @@ public class PostService {
     private final HeartRepository heartRepository;
 
     @Transactional
-    public ResponseEntity<?> save(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> savePost(PostRequestDto requestDto, UserDetailsImpl userDetails) {
         Optional<User> loginUser = userRepository.findByEmail(userDetails.getUsername());
 
         if (loginUser.isEmpty()) {
@@ -46,7 +46,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> search(String title, Pageable pageable) {
+    public ResponseEntity<?> searchPost(String title, Pageable pageable) {
         if (title.equals("")) {
             return ResponseEntity.ok(postRepository.findAll(pageable).map(Post::toPostDto));
         }
@@ -66,14 +66,23 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<?> update(long id, PostRequestDto requestDto) {
+    public ResponseEntity<?> editPost(long id, PostRequestDto requestDto, UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         Optional<Post> optionalPost = postRepository.findById(id);
 
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User Not Found");
+        }
         if (optionalPost.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
+        User loginUser = optionalUser.get();
         Post post = optionalPost.get();
+
+        if (loginUser.canNotControlPost(post)) {
+            return ResponseEntity.badRequest().body("Not Permitted");
+        }
 
         post.edit(requestDto);
 
@@ -81,21 +90,30 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseEntity<?> delete(long id) {
+    public ResponseEntity<?> deletePost(long id, UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         Optional<Post> optionalPost = postRepository.findById(id);
 
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User Not Found");
+        }
         if (optionalPost.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
+        User loginUser = optionalUser.get();
         Post post = optionalPost.get();
+
+        if (loginUser.canNotControlPost(post)) {
+            return ResponseEntity.badRequest().body("Not Permitted");
+        }
 
         postRepository.delete(post);
         return ResponseEntity.ok("post deleted");
     }
 
     @Transactional
-    public ResponseEntity<?> like(long id, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> likePost(long id, UserDetailsImpl userDetails) {
         Optional<User> optionalUser = userRepository.findByEmail(userDetails.getUsername());
         Optional<Post> optionalPost = postRepository.findById(id);
 

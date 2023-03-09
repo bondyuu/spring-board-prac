@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -160,7 +159,7 @@ public class UserService {
         User loginUser = optionalLoginUser.get();
         User targetUser = optionalTargetUser.get();
 
-        if (loginUser.canNotControl(targetUser)) {
+        if (loginUser.canNotControlUser(targetUser)) {
             return ResponseEntity.badRequest().body("Not Permitted");
         }
 

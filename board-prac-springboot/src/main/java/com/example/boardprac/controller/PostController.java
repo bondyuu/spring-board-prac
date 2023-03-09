@@ -21,30 +21,32 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody PostRequestDto requestDto,
+    public ResponseEntity<?> savePost(@RequestBody PostRequestDto requestDto,
                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.save(requestDto, userDetails);
+        return postService.savePost(requestDto, userDetails);
     }
 
     @GetMapping
-    public ResponseEntity<?> search(@RequestParam String title,
+    public ResponseEntity<?> searchPost(@RequestParam String title,
                                   @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return postService.search(title, pageable);
+        return postService.searchPost(title, pageable);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<?> edit(@RequestBody PostRequestDto requestDto, @PathVariable(name = "postId") long id) {
-        return postService.update(id, requestDto);
+    public ResponseEntity<?> editPost(@RequestBody PostRequestDto requestDto, @PathVariable(name = "postId") long id,
+                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.editPost(id, requestDto, userDetails);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> delete(@PathVariable(name = "postId") long id) {
-        return postService.delete(id);
+    public ResponseEntity<?> deletePost(@PathVariable(name = "postId") long id,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.deletePost(id, userDetails);
     }
 
     @PostMapping("/like/{postId}")
-    public ResponseEntity<?> like(@PathVariable(name = "postId") long id,
+    public ResponseEntity<?> likePost(@PathVariable(name = "postId") long id,
                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.like(id, userDetails);
+        return postService.likePost(id, userDetails);
     }
 }
