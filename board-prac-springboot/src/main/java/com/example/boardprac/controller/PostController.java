@@ -27,9 +27,9 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<?> find(@RequestParam String title,
+    public ResponseEntity<?> search(@RequestParam String title,
                                   @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return postService.find(title, pageable);
+        return postService.search(title, pageable);
     }
 
     @PutMapping("/{postId}")

@@ -46,7 +46,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> find(String title, Pageable pageable) {
+    public ResponseEntity<?> search(String title, Pageable pageable) {
         if (title.equals("")) {
             return ResponseEntity.ok(postRepository.findAll(pageable).map(Post::toPostDto));
         }
