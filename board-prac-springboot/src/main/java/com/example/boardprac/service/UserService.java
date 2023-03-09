@@ -3,10 +3,7 @@ package com.example.boardprac.service;
 import com.example.boardprac.auth.UserDetailsImpl;
 import com.example.boardprac.domain.RefreshToken;
 import com.example.boardprac.domain.User;
-import com.example.boardprac.dto.LoginRequestDto;
-import com.example.boardprac.dto.SignupRequestDto;
-import com.example.boardprac.dto.TokenDto;
-import com.example.boardprac.dto.UserDto;
+import com.example.boardprac.dto.*;
 import com.example.boardprac.global.Role;
 import com.example.boardprac.jwt.TokenProvider;
 import com.example.boardprac.repository.RefreshTokenRepository;
@@ -43,10 +40,17 @@ public class UserService {
             return ResponseEntity.badRequest().body("Duplicated Email");
         }
 
+        Role role;
+        if (email.equals("admin@test.com")){
+            role = Role.ROLE_ADMIN;
+        } else {
+            role = Role.ROLE_USER;
+        }
+
         User user = userRepository.save(User.builder()
                                             .email(email)
                                             .password(bCryptPasswordEncoder.encode(password))
-                                            .role(Role.ROLE_USER)
+                                            .role(role)
                                             .build());
         return ResponseEntity.ok(user.toUserDto());
     }
@@ -73,7 +77,10 @@ public class UserService {
         TokenDto token = tokenProvider.generateToken(authentication);
 
         refreshTokenRepository.save(RefreshToken.builder().user(user).token(token.getRefreshToken()).build());
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(LoginResponseDto.builder()
+                                                .token(token)
+                                                .role(user.getRole())
+                                                .build());
     }
 
     @Transactional
@@ -95,13 +102,13 @@ public class UserService {
 
     public ResponseEntity<?> getUsers(String email, UserDetailsImpl userDetails) {
         String loginUserEmail = userDetails.getUsername();
-        Optional<User> optionalUser = userRepository.findByEmail(loginUserEmail);
+        Optional<User> optionalLoginUser = userRepository.findByEmail(loginUserEmail);
 
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body("Not Found Admin");
+        if (optionalLoginUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("Admin Not Found");
         }
 
-        User loginUser = optionalUser.get();
+        User loginUser = optionalLoginUser.get();
         if (loginUser.isNotAdmin()) {
             return ResponseEntity.badRequest().body("Only Admin Permitted");
         }
@@ -113,4 +120,26 @@ public class UserService {
         return ResponseEntity.ok(userRepository.findAllByEmailContaining(email).stream().map(User::toUserDto).toList());
     }
 
+    public ResponseEntity<?> getUserDetail(long id, UserDetailsImpl userDetails) {
+        String loginUserEmail = userDetails.getUsername();
+        Optional<User> optionalLoginUser = userRepository.findByEmail(loginUserEmail);
+
+        if (optionalLoginUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("Admin Not Found");
+        }
+
+        User loginUser = optionalLoginUser.get();
+        if (loginUser.isNotAdmin()) {
+            return ResponseEntity.badRequest().body("Only Admin Permitted");
+        }
+
+        Optional<User> optionalTargetUser = userRepository.findById(id);
+        if (optionalTargetUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User Not Found");
+        }
+
+        User targetUser = optionalTargetUser.get();
+
+        return ResponseEntity.ok(targetUser);
+    }
 }

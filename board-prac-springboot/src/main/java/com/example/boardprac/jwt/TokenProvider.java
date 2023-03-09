@@ -3,6 +3,7 @@ package com.example.boardprac.jwt;
 import com.example.boardprac.auth.UserDetailsImpl;
 import com.example.boardprac.domain.User;
 import com.example.boardprac.dto.TokenDto;
+import com.example.boardprac.global.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -77,7 +78,7 @@ public class TokenProvider {
                         .collect(Collectors.toList());
 
         // UserDetails 객체를 만들어서 Authentication 리턴
-        UserDetails principal = new UserDetailsImpl(new User(claims.getSubject(), "", User.Role.valueOf(authorities.get(0).toString())));
+        UserDetails principal = new UserDetailsImpl(new User(claims.getSubject(), "", Role.valueOf(authorities.get(0).toString())));
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

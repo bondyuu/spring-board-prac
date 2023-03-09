@@ -125,7 +125,7 @@ public class PostService {
         return ResponseEntity.ok("좋아요 취소");
     }
 
-    public ResponseEntity<?> getPosts(long id, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> getPostsByUser(long id, UserDetailsImpl userDetails) {
         String loginUserEmail = userDetails.getUsername();
         Optional<User> optionalLoginUser = userRepository.findByEmail(loginUserEmail);
 
