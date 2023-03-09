@@ -7,6 +7,7 @@ import com.example.boardprac.dto.LoginRequestDto;
 import com.example.boardprac.dto.SignupRequestDto;
 import com.example.boardprac.dto.TokenDto;
 import com.example.boardprac.dto.UserDto;
+import com.example.boardprac.global.Role;
 import com.example.boardprac.jwt.TokenProvider;
 import com.example.boardprac.repository.RefreshTokenRepository;
 import com.example.boardprac.repository.UserRepository;
@@ -44,7 +45,7 @@ public class UserService {
         User user = userRepository.save(User.builder()
                                             .email(email)
                                             .password(bCryptPasswordEncoder.encode(password))
-                                            .role(User.Role.ROLE_USER)
+                                            .role(Role.ROLE_USER)
                                             .build());
         return ResponseEntity.ok(UserDto.builder()
                                         .id(user.getId())

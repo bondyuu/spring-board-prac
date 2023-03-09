@@ -1,6 +1,7 @@
 package com.example.boardprac.domain;
 
 import com.example.boardprac.dto.UserDto;
+import com.example.boardprac.global.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,11 +54,5 @@ public class User {
                 .id(this.id)
                 .email(this.email)
                 .build();
-    }
-
-    public enum Role {
-        ROLE_USER,
-        ROLE_ADMIN;
-
     }
 }
