@@ -117,11 +117,11 @@ public class PostService {
                                         .user(user)
                                         .post(post)
                                         .build());
-            post.like();
+
             return ResponseEntity.ok("좋아요 성공");
         }
         heartRepository.delete(heart.get());
-        post.unlike();
+
         return ResponseEntity.ok("좋아요 취소");
     }
 }

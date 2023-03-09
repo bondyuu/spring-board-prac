@@ -24,8 +24,6 @@ public class Post {
     private String title;
     @Column
     private String content;
-    @Column
-    private long heartNum;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -44,20 +42,11 @@ public class Post {
         this.title = title;
         this.content = content;
         this.user = user;
-        this.heartNum = 0L;
     }
 
     public void edit(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-    }
-
-    public void like() {
-        this.heartNum++;
-    }
-
-    public void unlike() {
-        this.heartNum--;
     }
 
     public PostDto toPostDto() {
@@ -66,7 +55,12 @@ public class Post {
                 .title(this.title)
                 .content(this.content)
                 .user(this.user.toUserDto())
-                .heartNum(this.heartNum)
+                .heartNum(this.heartList.size())
+                .isHeart(checkHeartListContainsUser(this.heartList, this.user))
                 .build();
+    }
+
+    private boolean checkHeartListContainsUser(List<Heart> list, User user) {
+        return list.stream().filter(heart -> heart.getUser().equals(user)).toList().size() > 0;
     }
 }
