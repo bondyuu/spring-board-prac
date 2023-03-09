@@ -124,4 +124,27 @@ public class PostService {
 
         return ResponseEntity.ok("좋아요 취소");
     }
+
+    public ResponseEntity<?> getPosts(long id, UserDetailsImpl userDetails) {
+        String loginUserEmail = userDetails.getUsername();
+        Optional<User> optionalLoginUser = userRepository.findByEmail(loginUserEmail);
+
+        if (optionalLoginUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("Admin Not Found");
+        }
+
+        User loginUser = optionalLoginUser.get();
+        if (loginUser.isNotAdmin()) {
+            return ResponseEntity.badRequest().body("Only Admin Permitted");
+        }
+
+        Optional<User> OptionalTargetUser = userRepository.findById(id);
+        if (OptionalTargetUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User Not Found");
+        }
+
+        User targetUser = OptionalTargetUser.get();
+
+        return ResponseEntity.ok(postRepository.findAllByUser(targetUser).stream().map(Post::toPostDto).toList());
+    }
 }
