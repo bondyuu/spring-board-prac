@@ -31,4 +31,10 @@ public class UserController {
     public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.logout(userDetails);
     }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") long id,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.deleteUser(id, userDetails);
+    }
 }

@@ -142,4 +142,30 @@ public class UserService {
 
         return ResponseEntity.ok(targetUser);
     }
+
+    @Transactional
+    public ResponseEntity<?> deleteUser(long id, UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+
+        Optional<User> optionalLoginUser = userRepository.findByEmail(email);
+        Optional<User> optionalTargetUser = userRepository.findById(id);
+
+        if (optionalLoginUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("loginUser Not Found");
+        }
+        if (optionalTargetUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("targetUser Not Found");
+        }
+
+        User loginUser = optionalLoginUser.get();
+        User targetUser = optionalTargetUser.get();
+
+        if (loginUser.canNotControl(targetUser)) {
+            return ResponseEntity.badRequest().body("Not Permitted");
+        }
+
+        userRepository.delete(targetUser);
+
+        return ResponseEntity.ok("Deleted");
+    }
 }

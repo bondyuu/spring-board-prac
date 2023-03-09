@@ -60,4 +60,8 @@ public class User {
     public boolean isNotAdmin() {
         return !this.role.equals(Role.ROLE_ADMIN);
     }
+
+    public boolean canNotControl(User target) {
+        return this.id != target.getId() && this.role != Role.ROLE_ADMIN;
+    }
 }
