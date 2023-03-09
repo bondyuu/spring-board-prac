@@ -29,6 +29,21 @@ const routes = [
     path: '/write-post',
     name: 'writepost',
     component: () => import('../views/PostWriteView.vue')
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/admin/AdminMainView.vue')
+  },
+  {
+    path: '/admin/users',
+    name: 'admin-users',
+    component: () => import('../views/admin/AdminUsersView.vue')
+  },
+  {
+    path: '/admin/posts',
+    name: 'admin-posts',
+    component: () => import('../views/admin/AdminPostsView.vue')
   }
 ]
 

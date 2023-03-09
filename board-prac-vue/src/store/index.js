@@ -10,6 +10,7 @@ export default createStore({
         counter : 2,
         accessToken: null,
         refreshToekn: null,
+        role: null,
     },
     getters : {
         getTwoPowerCounter(state){
@@ -17,6 +18,9 @@ export default createStore({
         },
         isLogin(state) {
             return state.accessToken === null ? false : true;
+        },
+        isAdmin(state) {
+            return state.role === '관리자' ? true : false;
         }
     },
     mutations : {
@@ -28,6 +32,9 @@ export default createStore({
         },
         setRefreshToken(state, token) {
             state.refreshToekn = token;
+        },
+        setRole(state, value) {
+            state.role = value;
         }
     },
     actions: {
@@ -36,6 +43,9 @@ export default createStore({
         },
         setRefreshToken: ({commit}, token) => {
             commit('setRefreshToken', token);
+        },
+        setRole: ({commit}, value) => {
+            commit('setRole', value);
         }
     }
 });
