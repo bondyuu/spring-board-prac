@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h3>
-      HI~
+      To use the features, please login
     </h3>
   </div>
 </template>

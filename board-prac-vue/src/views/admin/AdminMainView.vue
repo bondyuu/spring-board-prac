@@ -56,7 +56,7 @@ export default {
 </script>
 <style scoped>
 h1 {
-    margin-left: 16%;
+    margin-left: 20%;
     margin-bottom: 30px;
 }
 .wrapper {
@@ -64,12 +64,12 @@ h1 {
 }
 .card {
     display: inline-block;
-    width: 30%;
+    width: 28%;
 }
 .card-text {
     font-size: 20px;
 }
 .card-left {
-    margin-right: 8%;
+    margin-right: 4%;
 }
 </style>
