@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -54,9 +56,14 @@ public class UserService {
     public ResponseEntity<?> login(LoginRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = optionalUser.get();
 
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             return ResponseEntity.badRequest().body("Password is not valid");
@@ -74,9 +81,13 @@ public class UserService {
     public ResponseEntity<?> logout(UserDetailsImpl userDetails) {
         String email = userDetails.getUsername();
 
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("Not Found")
-        );
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = optionalUser.get();
 
         refreshTokenRepository.deleteByUser(user);
 
