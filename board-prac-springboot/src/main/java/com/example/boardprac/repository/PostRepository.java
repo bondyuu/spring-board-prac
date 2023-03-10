@@ -2,6 +2,7 @@ package com.example.boardprac.repository;
 
 import com.example.boardprac.domain.Post;
 import com.example.boardprac.domain.User;
+import com.example.boardprac.global.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,4 +14,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByTitleContaining(String title, Pageable pageable);
     Page<Post> findAll(Pageable pageable);
     List<Post> findAllByUser(User user);
+    long countAllByStatus(PostStatus status);
 }

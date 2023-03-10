@@ -32,7 +32,7 @@ public class UserController {
         return userService.logout(userDetails);
     }
 
-    @DeleteMapping("/{userId}")
+    @PostMapping("/{userId}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") long id,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.deleteUser(id, userDetails);

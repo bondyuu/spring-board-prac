@@ -5,6 +5,7 @@ import com.example.boardprac.domain.RefreshToken;
 import com.example.boardprac.domain.User;
 import com.example.boardprac.dto.*;
 import com.example.boardprac.global.Role;
+import com.example.boardprac.global.UserStatus;
 import com.example.boardprac.jwt.TokenProvider;
 import com.example.boardprac.repository.RefreshTokenRepository;
 import com.example.boardprac.repository.UserRepository;
@@ -50,6 +51,7 @@ public class UserService {
                                             .email(email)
                                             .password(bCryptPasswordEncoder.encode(password))
                                             .role(role)
+                                            .status(UserStatus.ACTIVE)
                                             .build());
         return ResponseEntity.ok(user.toUserDto());
     }
@@ -163,8 +165,14 @@ public class UserService {
             return ResponseEntity.badRequest().body("Not Permitted");
         }
 
-        userRepository.delete(targetUser);
 
-        return ResponseEntity.ok("Deleted");
+        if (loginUser.getRole().equals(Role.ROLE_ADMIN)) {
+            targetUser.toBannedUser(UserStatus.BANNED);
+
+            return ResponseEntity.ok(UserStatus.BANNED.getDesc());
+        }
+
+        targetUser.toLeavedUser(UserStatus.LEAVED);
+        return ResponseEntity.ok(UserStatus.LEAVED.getDesc());
     }
 }

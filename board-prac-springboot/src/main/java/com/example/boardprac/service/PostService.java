@@ -6,6 +6,8 @@ import com.example.boardprac.domain.Post;
 import com.example.boardprac.domain.User;
 import com.example.boardprac.dto.PostDto;
 import com.example.boardprac.dto.PostRequestDto;
+import com.example.boardprac.global.PostStatus;
+import com.example.boardprac.global.Role;
 import com.example.boardprac.repository.HeartRepository;
 import com.example.boardprac.repository.PostRepository;
 import com.example.boardprac.repository.UserRepository;
@@ -40,6 +42,7 @@ public class PostService {
                                             .title(requestDto.getTitle())
                                             .content(requestDto.getContent())
                                             .user(loginUser.get())
+                                            .status(PostStatus.ACTIVE)
                                             .build());
 
         return ResponseEntity.ok(post.toPostDto());
@@ -108,7 +111,11 @@ public class PostService {
             return ResponseEntity.badRequest().body("Not Permitted");
         }
 
-        postRepository.delete(post);
+        if (loginUser.getRole() == Role.ROLE_ADMIN) {
+            post.toBannedPost(PostStatus.BANNED);
+        } else {
+            post.toDeletedPost(PostStatus.DELETED);
+        }
         return ResponseEntity.ok("post deleted");
     }
 
