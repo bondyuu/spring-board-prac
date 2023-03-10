@@ -46,7 +46,12 @@ export default {
         this.list = res.data.content;
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.code);
+        if (err.code === 'ERR_BAD_REQUEST') {
+          this.$store.commit('setAccessToken', null);
+          this.$store.commit('setRefreshToken', null);
+        }
+
       });
     },
   }
