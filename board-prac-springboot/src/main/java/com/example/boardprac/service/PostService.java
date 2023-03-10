@@ -51,10 +51,10 @@ public class PostService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> searchPost(String title, Pageable pageable) {
         if (title.equals("")) {
-            return ResponseEntity.ok(postRepository.findAll(pageable).map(Post::toPostDto));
+            return ResponseEntity.ok(postRepository.findAllByStatus(PostStatus.ACTIVE, pageable).map(Post::toPostDto));
         }
 
-        return ResponseEntity.ok(postRepository.findAllByTitleContaining(title, pageable).map(Post::toPostDto));
+        return ResponseEntity.ok(postRepository.findAllByTitleContainingByStatus(title, PostStatus.ACTIVE , pageable).map(Post::toPostDto));
     }
 
     @Transactional(readOnly = true)
