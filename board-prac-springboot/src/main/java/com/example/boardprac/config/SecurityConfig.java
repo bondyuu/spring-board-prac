@@ -28,13 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
-                .ignoringAntMatchers("/h2-console/**")
-                .disable()
-
-                .headers()
-                .frameOptions()
-                .disable();
+        http.csrf().disable();
 
         http.cors().configurationSource(corsConfigurationSource);
 
@@ -45,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/users/signup").permitAll()
                 .antMatchers("/users/login").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().hasAnyRole("ADMIN", "USER")
 
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
