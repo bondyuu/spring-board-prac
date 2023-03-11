@@ -54,7 +54,7 @@ public class PostService {
             return ResponseEntity.ok(postRepository.findAllByStatus(PostStatus.ACTIVE, pageable).map(Post::toPostDto));
         }
 
-        return ResponseEntity.ok(postRepository.findAllByTitleContainingByStatus(title, PostStatus.ACTIVE , pageable).map(Post::toPostDto));
+        return ResponseEntity.ok(postRepository.findAllByTitleContainingAndStatus(title, PostStatus.ACTIVE , pageable).map(Post::toPostDto));
     }
 
     @Transactional(readOnly = true)
