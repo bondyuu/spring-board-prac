@@ -7,7 +7,18 @@
         </b-nav-form>
     </div>
     <div class="tbl-wrapper">
-    <b-table striped hover :items="list"></b-table>
+    <b-table striped hover :fields="fields" :items="list">
+        <template #cell(key)="data">
+            {{ data.index + 1 }}
+        </template>
+        <template #cell(user)="data">
+            {{ data.item.user.email }}
+        </template>
+        <template #cell(action)="data">
+            <b-button v-if="data.item.status==='활성게시글'" variant="outline-success" class="btn-del" @:click="deletePost(data.item.id)">Delete</b-button>
+            <!-- deleteUser(data.item.id) -->
+        </template>
+    </b-table>
   </div>
 </template>
 
@@ -22,7 +33,16 @@ export default {
     data() {
         return {
             title: '',
-            list: []
+            list: [],
+            fields: [
+                'key',
+                'title',
+                'content',
+                'user',
+                'heartNum',
+                'status',
+                'action'
+            ],
         }
     },
     methods: {
@@ -42,6 +62,22 @@ export default {
             } else {
                 this.$router.push('/');
             }
+        },
+        deletePost(id) {
+            axios
+            .post('http://localhost:8080/posts/'+id,'',
+            {
+                headers: {
+                        'Authorization': this.$store.state.accessToken
+                    }
+            })       
+            .then((res) => {
+                const item = this.list.find((item) => item.id === id);
+                item.status = res.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
     },
 }
