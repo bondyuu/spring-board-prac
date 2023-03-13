@@ -32,6 +32,12 @@ public class PostController {
         return postService.searchPost(title, pageable);
     }
 
+    @GetMapping("/{postId}/detail")
+    public ResponseEntity<?> getPostDetail(@PathVariable(name = "postId") long id,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPostDetail(id, userDetails);
+    }
+
     @PutMapping("/{postId}")
     public ResponseEntity<?> editPost(@RequestBody PostRequestDto requestDto, @PathVariable(name = "postId") long id,
                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {

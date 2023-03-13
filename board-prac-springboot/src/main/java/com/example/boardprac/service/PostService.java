@@ -58,14 +58,25 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findById(long id) {
+    public ResponseEntity<?> getPostDetail(long id, UserDetailsImpl userDetails) {
+        String email = userDetails.getUsername();
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         Optional<Post> optionalPost = postRepository.findById(id);
 
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User Not Found");
+        }
         if (optionalPost.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        User loginUser = optionalUser.get();
+        Post post = optionalPost.get();
 
-        return ResponseEntity.ok(optionalPost.get());
+        if (loginUser.canNotControlPost(post)) {
+            return ResponseEntity.badRequest().body("Not Permitted");
+        }
+
+        return ResponseEntity.ok(optionalPost.get().toPostDto());
     }
 
     @Transactional
@@ -113,10 +124,11 @@ public class PostService {
 
         if (loginUser.getRole() == Role.ROLE_ADMIN) {
             post.toBannedPost(PostStatus.BANNED);
-        } else {
-            post.toDeletedPost(PostStatus.DELETED);
+            return ResponseEntity.ok(PostStatus.BANNED);
         }
-        return ResponseEntity.ok("post deleted");
+        post.toDeletedPost(PostStatus.DELETED);
+
+        return ResponseEntity.ok(PostStatus.DELETED);
     }
 
     @Transactional
