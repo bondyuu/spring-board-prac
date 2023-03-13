@@ -28,6 +28,8 @@ public class User {
     @Column
     private String email;
     @Column
+    private String name;
+    @Column
     private String password;
     @Column
     @Enumerated(EnumType.STRING)
@@ -47,8 +49,9 @@ public class User {
     private Timestamp modifiedAt;
 
     @Builder
-    public User(String email, String password, Role role, UserStatus status) {
+    public User(String email, String name, String password, Role role, UserStatus status) {
         this.email = email;
+        this.name = name;
         this.password = password;
         this.role = role;
         this.status = status;
@@ -64,6 +67,7 @@ public class User {
         return UserDto.builder()
                 .id(this.id)
                 .email(this.email)
+                .name(this.name)
                 .role(this.role)
                 .status(this.status)
                 .build();

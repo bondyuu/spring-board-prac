@@ -13,13 +13,15 @@ import lombok.Setter;
 public class UserDto {
     private long id;
     private String email;
+    private String name;
     private String role;
     private String status;
 
     @Builder
-    public UserDto(long id, String email, Role role, UserStatus status) {
+    public UserDto(long id, String email, String name, Role role, UserStatus status) {
         this.id = id;
         this.email = email;
+        this.name = name;
         this.role = role.getDesc();
         this.status = status.getDesc();
     }
