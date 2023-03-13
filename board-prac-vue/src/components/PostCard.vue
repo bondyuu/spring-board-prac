@@ -1,14 +1,13 @@
-<template>
-    <b-card >
+<template :v-if="this.active === true">
+    <b-card>
         <b-card-title class="title">
-            {{ item.title }}
+            <router-link :to="`/posts/${item.id}/detail`">{{ item.title }} </router-link>
             <div class="more">
                 <b-dropdown id="dropdown-offset" class="m-2" no-caret>
                     <template #button-content>
                         <BIconThreeDotsVertical></BIconThreeDotsVertical>
                     </template>
-                    <b-dropdown-item href="#">Edit</b-dropdown-item>
-                    <b-dropdown-item href="#">Delete</b-dropdown-item>
+                    <b-dropdown-item @click="deletePost(item.id)">Delete</b-dropdown-item>
                 </b-dropdown>
             </div>
         </b-card-title>
@@ -21,6 +20,7 @@
   
 <script>
 import { BIconThreeDotsVertical } from 'bootstrap-icons-vue';
+import axios from 'axios';
 
 export default {
     name: 'PostCard',
@@ -28,8 +28,27 @@ export default {
         item: Object
     },
     components: {
-    BIconThreeDotsVertical
-}
+    BIconThreeDotsVertical 
+    },
+    methods: {
+        deletePost(id) {
+            axios
+            .post('http://localhost:8080/posts/'+id,'',
+            {
+                headers: {
+                        'Authorization': this.$store.state.accessToken
+                    }
+            })       
+            .then((res) => {
+                console.log(res);
+                window.location.reload();
+
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+    }
 }
 </script>
 
