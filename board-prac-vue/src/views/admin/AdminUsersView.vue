@@ -12,7 +12,7 @@
                 {{ data.index + 1 }}
             </template>
             <template #cell(email)="data">
-                <a href="#"> {{ data.value }} </a>
+                <router-link :to="`/admin/users/${data.item.id}`"> {{ data.value }}</router-link>
             </template>
             <template #cell(action)="data">
                 <b-button v-if="data.item.status==='활성회원'" variant="outline-success" class="btn-del" @:click="deleteUser(data.item.id)">Delete</b-button>
