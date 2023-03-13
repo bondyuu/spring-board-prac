@@ -5,10 +5,7 @@
     <nav v-if="!store.getters.isAdmin">
       <router-link to="/">Home</router-link> 
       | <router-link to="/posts">PostList</router-link>
-      | <router-link to="/mypage">My Page</router-link>
-      | <router-link to="/mypage">My Page</router-link>
-      | <router-link to="/mypage">My Page</router-link>
-      | <router-link to="/mypage">My Page</router-link>
+
     </nav>
     <nav v-else>
       <router-link to="/admin">main</router-link> 
