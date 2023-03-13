@@ -26,6 +26,11 @@ const routes = [
     component: () => import('../views/PostListView.vue')
   },
   {
+    path: '/posts/:id/detail',
+    name: 'postdetail',
+    component: () => import('../views/PostDetailView.vue')
+  },
+  {
     path: '/write-post',
     name: 'writepost',
     component: () => import('../views/PostWriteView.vue')
@@ -44,6 +49,11 @@ const routes = [
     path: '/admin/posts',
     name: 'admin-posts',
     component: () => import('../views/admin/AdminPostsView.vue')
+  },
+  {
+    path: '/admin/users/:id',
+    name: 'admin-user-detail',
+    component: () => import('../views/admin/AdminUserDetailView.vue')
   }
 ]
 
