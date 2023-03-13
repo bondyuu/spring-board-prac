@@ -34,7 +34,7 @@ public class AdminController {
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUserDetail(@PathVariable(name = "userId") long id,
                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getUserDetail(id, userDetails);
+        return adminService.getUserDetail(id, userDetails);
     }
 
     @GetMapping("/users/{userId}/posts")
