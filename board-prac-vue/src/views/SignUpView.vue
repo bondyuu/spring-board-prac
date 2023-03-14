@@ -7,6 +7,10 @@
                 <b-form-input v-model="email" id="email" style="width: 30%; margin-left: 35%;"></b-form-input>   
             </div>
             <div style="margin-bottom: 50px;">
+              <label for="name" style="margin-bottom: 10px; font-size: 20px;">name</label>
+              <b-form-input v-model="name" id="name" style="width: 30%; margin-left: 35%;"></b-form-input>
+            </div>
+            <div style="margin-bottom: 50px;">
                 <label for="password" style="margin-bottom: 10px; font-size: 20px;">password</label>
                 <b-form-input v-model="password" id="password" style="width: 30%; margin-left: 35%;"></b-form-input>
             </div>
@@ -24,6 +28,7 @@ export default {
     data() {
         return {
             email: '',
+            name: '',
             password: '',
         };
     },
@@ -31,6 +36,7 @@ export default {
         submitForm() {
             const userData = {
                 email: this.email,
+                name: this.name,
                 password: this.password
             };
 
