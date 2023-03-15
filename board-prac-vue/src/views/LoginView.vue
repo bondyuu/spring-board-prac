@@ -8,7 +8,7 @@
             </div>
             <div style="margin-bottom: 50px;">
                 <label for="password" style="margin-bottom: 10px; font-size: 20px;">password</label>
-                <b-form-input v-model="password" id="password" style="width: 30%; margin-left: 35%;"></b-form-input>
+                <b-form-input v-model="password" id="password" type="password" style="width: 30%; margin-left: 35%;"></b-form-input>
             </div>
         </b-form>
         <b-button variant="outline-primary" @click="submitForm">Login</b-button>
