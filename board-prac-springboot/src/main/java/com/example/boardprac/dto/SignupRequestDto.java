@@ -15,9 +15,9 @@ public class SignupRequestDto {
     private String email;
 
     @NotBlank
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z]).{8,16}")
     private String name;
 
     @NotBlank
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z]).{8,16}")
     private String password;
 }
