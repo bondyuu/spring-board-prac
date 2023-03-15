@@ -7,18 +7,25 @@
         </b-nav-form>
     </div>
     <div class="tbl-wrapper">
-    <b-table striped hover :fields="fields" :items="list">
-        <template #cell(key)="data">
-            {{ data.index + 1 }}
-        </template>
-        <template #cell(user)="data">
-            {{ data.item.user.email }}
-        </template>
-        <template #cell(action)="data">
-            <b-button v-if="data.item.status==='활성게시글'" variant="outline-success" class="btn-del" @:click="deletePost(data.item.id)">Delete</b-button>
-            <!-- deleteUser(data.item.id) -->
-        </template>
-    </b-table>
+      <b-table striped hover :fields="fields" :items="list">
+          <template #cell(key)="data">
+              {{ data.index + 1 }}
+          </template>
+          <template #cell(user)="data">
+              {{ data.item.user.email }}
+          </template>
+          <template #cell(action)="data">
+              <b-button v-if="data.item.status==='활성게시글'" variant="outline-success" class="btn-del" @:click="deletePost(data.item.id)">Delete</b-button>
+              <!-- deleteUser(data.item.id) -->
+          </template>
+      </b-table>
+      <b-pagination
+          v-model="currentPage"
+          :total-rows="rows"
+          :per-page="1"
+          aria-controls="my-table"
+          @click="getPosts"
+      ></b-pagination>
   </div>
 </template>
 
@@ -32,6 +39,8 @@ export default {
     },
     data() {
         return {
+            rows: '',
+            currentPage: 1,
             title: '',
             list: [],
             fields: [
@@ -49,7 +58,7 @@ export default {
         getPosts() {
             if (this.$store.state.role === '관리자') {
                 axios
-                .get('http://localhost:8080/admin/posts?title='+this.title,
+                .get('http://localhost:8080/admin/posts?title='+this.title+'&page='+(this.currentPage-1),
                 {
                     headers: {
                         'Authorization': this.$store.state.accessToken
@@ -58,6 +67,7 @@ export default {
                 .then((res) => {
                     console.log(res);
                     this.list = res.data.content;
+                    this.rows = res.data.totalPages;
                 })
             } else {
                 this.$router.push('/');

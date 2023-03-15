@@ -19,6 +19,13 @@
                 <!-- deleteUser(data.item.id) -->
             </template>
         </b-table>
+        <b-pagination
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="1"
+            aria-controls="my-table"
+            @click="getUsers"
+        ></b-pagination>
     </div>
 </template>
 
@@ -32,6 +39,8 @@ export default {
     },
     data() {
         return {
+            rows: '',
+            currentPage: 1,
             fields: [
                 'key',
                 'email',
@@ -47,7 +56,7 @@ export default {
         getUsers() {
             if (this.$store.state.role === '관리자') {
                 axios
-                .get('http://localhost:8080/admin/users?email='+this.email,
+                .get('http://localhost:8080/admin/users?email='+this.email+'&page='+(this.currentPage-1),
                 {
                     headers: {
                         'Authorization': this.$store.state.accessToken
@@ -55,7 +64,8 @@ export default {
                 })
                 .then((res) => {
                     console.log(res);
-                    this.list = res.data;
+                    this.list = res.data.content;
+                   this.rows = res.data.totalPages;
                 })
             } else {
                 this.$router.push('/');
