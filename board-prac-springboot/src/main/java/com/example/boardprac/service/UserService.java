@@ -36,6 +36,7 @@ public class UserService {
     public ResponseEntity<?> signUp(SignupRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
+        String name = requestDto.getName();
 
         if (userRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().body("Duplicated Email");
@@ -51,6 +52,7 @@ public class UserService {
         User user = userRepository.save(User.builder()
                                             .email(email)
                                             .password(bCryptPasswordEncoder.encode(password))
+                                            .name(name)
                                             .role(role)
                                             .status(UserStatus.ACTIVE)
                                             .build());
