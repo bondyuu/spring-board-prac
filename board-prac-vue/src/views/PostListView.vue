@@ -6,7 +6,7 @@
       <b-button variant="outline-success" class="bt-write" href="/write-post">New Post</b-button>
     </b-nav-form>
   </div>
-  <div class="postlist">
+  <div class="postlist" ref="scrollcheck">
     <div class="wrapper" v-for="(obj, idx) in list" :key="idx">
       <PostCard :item="obj"/>
     </div>
@@ -26,34 +26,79 @@ export default {
     return {
         list: [],
         searchTitle: '',
+        page: '',
+        isLast: false
     };
   },
   mounted() {
-      this.getBoards()
+    window.addEventListener('scroll', this.handleScroll);
+    this.page = 0;
+    this.getBoards();
   },
   methods: {
-    getBoards() {
-      console.log(this.searchTitle);
-      axios
-      .get('http://localhost:8080/posts?title='+this.searchTitle,
-      {
-        headers: {
-            'Authorization': this.$store.state.accessToken
-        }
-      })
-      .then((res) => {
-        console.log(res);
-        this.list = res.data.content;
-      })
-      .catch((err) => {
-        console.log(err.code);
-        if (err.code === 'ERR_BAD_REQUEST') {
-          this.$store.commit('setAccessToken', null);
-          this.$store.commit('setRefreshToken', null);
-        }
-
-      });
+    handleScroll() {
+      if (document.documentElement.scrollTop + window.innerHeight + 50 > document.documentElement.offsetHeight
+      && this.isLast === false) {
+        this.getMoreBoards();
+      }
     },
+    getBoards() {
+      this.isLast = false;
+      console.log(this.searchTitle);
+        axios
+          .get('http://localhost:8080/posts?title=' + this.searchTitle + '&page=0',
+              {
+                headers: {
+                  'Authorization': this.$store.state.accessToken
+                }
+              })
+          .then((res) => {
+            console.log(res);
+            this.list = res.data.content;
+            if (res.data.last === false) {
+              this.page++;
+            } else {
+              this.isLast = true;
+            }
+          })
+          .catch((err) => {
+            console.log(err.code);
+            if (err.code === 'ERR_BAD_REQUEST') {
+              this.$store.commit('setAccessToken', null);
+              this.$store.commit('setRefreshToken', null);
+            }
+
+          });
+    },
+    getMoreBoards() {
+      console.log(this.searchTitle);
+
+        axios
+            .get('http://localhost:8080/posts?title=' + this.searchTitle + '&page=' + this.page,
+                {
+                  headers: {
+                    'Authorization': this.$store.state.accessToken
+                  }
+                })
+            .then((res) => {
+              console.log(res);
+              this.list.push(...res.data.content);
+              if (res.data.last === false) {
+                this.page++;
+              } else {
+                this.isLast = true;
+              }
+            })
+            .catch((err) => {
+              console.log(err.code);
+              if (err.code === 'ERR_BAD_REQUEST') {
+                this.$store.commit('setAccessToken', null);
+                this.$store.commit('setRefreshToken', null);
+              }
+
+            });
+
+    }
   }
 }
 </script>
@@ -63,7 +108,7 @@ export default {
   text-align: center;
 }
 .wrapper {
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
   margin-right: 3%;
   width: 32%;
   display: inline-block;
