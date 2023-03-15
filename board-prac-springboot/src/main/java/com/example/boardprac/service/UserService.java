@@ -10,6 +10,7 @@ import com.example.boardprac.jwt.TokenProvider;
 import com.example.boardprac.repository.RefreshTokenRepository;
 import com.example.boardprac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -101,7 +102,7 @@ public class UserService {
         return ResponseEntity.ok("logout");
     }
 
-    public ResponseEntity<?> getUsers(String email, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> getUsers(String email, UserDetailsImpl userDetails, Pageable pageable) {
         String loginUserEmail = userDetails.getUsername();
         Optional<User> optionalLoginUser = userRepository.findByEmail(loginUserEmail);
 
@@ -115,10 +116,10 @@ public class UserService {
         }
 
         if (email.equals("")) {
-            return ResponseEntity.ok(userRepository.findAll().stream().map(User::toUserDto).toList());
+            return ResponseEntity.ok(userRepository.findAll(pageable).map(User::toUserDto));
         }
 
-        return ResponseEntity.ok(userRepository.findAllByEmailContaining(email).stream().map(User::toUserDto).toList());
+        return ResponseEntity.ok(userRepository.findAllByEmailContaining(email, pageable).map(User::toUserDto));
     }
 
     public ResponseEntity<?> getUserDetail(long id, UserDetailsImpl userDetails) {

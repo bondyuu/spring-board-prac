@@ -28,8 +28,9 @@ public class AdminController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getUsers(@RequestParam String email,
-                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getUsers(email, userDetails);
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                      @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return userService.getUsers(email, userDetails, pageable);
     }
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUserDetail(@PathVariable(name = "userId") long id,
