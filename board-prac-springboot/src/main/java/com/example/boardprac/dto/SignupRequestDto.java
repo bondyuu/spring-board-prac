@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Getter
 @NoArgsConstructor
@@ -14,6 +15,7 @@ public class SignupRequestDto {
     private String email;
 
     @NotBlank
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z]).{8,16}")
     private String name;
 
     @NotBlank
