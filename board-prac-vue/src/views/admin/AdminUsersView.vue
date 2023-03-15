@@ -14,6 +14,9 @@
             <template #cell(email)="data">
                 <router-link :to="`/admin/users/${data.item.id}`"> {{ data.value }}</router-link>
             </template>
+            <template #cell(name)="data">
+               {{ data.value }}
+            </template>
             <template #cell(action)="data">
                 <b-button v-if="data.item.status==='활성회원'" variant="outline-success" class="btn-del" @:click="deleteUser(data.item.id)">Delete</b-button>
                 <!-- deleteUser(data.item.id) -->
@@ -44,6 +47,7 @@ export default {
             fields: [
                 'key',
                 'email',
+                'name',
                 'role',
                 'status',
                 'action'

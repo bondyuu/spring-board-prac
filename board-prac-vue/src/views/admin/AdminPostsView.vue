@@ -7,12 +7,12 @@
         </b-nav-form>
     </div>
     <div class="tbl-wrapper">
-      <b-table striped hover :fields="fields" :items="list">
+      <b-table :fields="fields" :items="list">
           <template #cell(key)="data">
               {{ data.index + 1 }}
           </template>
-          <template #cell(user)="data">
-              {{ data.item.user.email }}
+          <template #cell(name)="data">
+              {{ data.item.user.name }}
           </template>
           <template #cell(action)="data">
               <b-button v-if="data.item.status==='활성게시글'" variant="outline-success" class="btn-del" @:click="deletePost(data.item.id)">Delete</b-button>
@@ -47,7 +47,7 @@ export default {
                 'key',
                 'title',
                 'content',
-                'user',
+                'name',
                 'heartNum',
                 'status',
                 'action'
