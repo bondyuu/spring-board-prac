@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> savePost(@RequestBody PostRequestDto requestDto,
+    public ResponseEntity<?> savePost(@RequestBody @Valid PostRequestDto requestDto,
                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.savePost(requestDto, userDetails);
     }
